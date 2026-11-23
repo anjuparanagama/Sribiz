@@ -1,19 +1,218 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 
-type PosType = "salora" | "cafe" | "retail";
+type PosId = "salora" | "cafe" | "retail";
+
+type Pos = {
+  id: PosId;
+  short: string;
+  tab: string;
+  icon: string;
+  badge: string;
+  title: string;
+  desc: string;
+  note: string;
+  features: [string, string][];
+  previewTitle: string;
+  previewTag: string;
+  preview: { name: string; meta?: string; value: string }[];
+  tip: string;
+  // Static class strings so Tailwind can detect them
+  c: {
+    tabActive: string;
+    chip: string;
+    check: string;
+    text: string;
+    btn: string;
+    ring: string;
+    tipBox: string;
+  };
+};
+
+const POS_LIST: Pos[] = [
+  {
+    id: "salora",
+    short: "Salora",
+    tab: "Salora — Salon & Spa",
+    icon: "💇‍♀️",
+    badge: "Salon, Wellness & SPA POS",
+    title: "Salora POS",
+    desc: "For hair salons, beauty clinics, spas and wellness centres. Bookings, stylist commissions and client history in one place.",
+    note: "Used by salons across Sri Lanka",
+    features: [
+      ["Appointment calendar", "Chair & stylist booking"],
+      ["Commission auto-split", "Tips & service tiers"],
+      ["Client history", "Formula & treatment notes"],
+      ["SMS / WhatsApp reminders", "Fewer no-shows"],
+      ["Room & bed allocation", "No double booking"],
+      ["Packages & gift cards", "Repeat visits"],
+    ],
+    previewTitle: "Today's services",
+    previewTag: "Touch ready",
+    preview: [
+      { name: "Hair Colour & Wash", meta: "Stylist: Anuja", value: "Rs. 12,500" },
+      { name: "Ayurvedic Full Body Spa", meta: "Room 02", value: "Rs. 9,800" },
+      { name: "Bridal Dressing Package", meta: "Sat • 8:00 AM", value: "Rs. 45,000" },
+    ],
+    tip: "Stylist commissions are calculated automatically at checkout.",
+    c: {
+      tabActive: "bg-gradient-to-r from-pink-500 to-rose-600 text-white shadow-lg shadow-rose-600/30",
+      chip: "bg-pink-500/10 border-pink-500/20 text-pink-600 dark:text-pink-400",
+      check: "bg-pink-500/15 text-pink-600 dark:text-pink-400",
+      text: "text-pink-600 dark:text-pink-400",
+      btn: "bg-pink-600 hover:bg-pink-700 shadow-pink-600/30",
+      ring: "border-pink-500 shadow-pink-500/10",
+      tipBox: "bg-pink-500/10 border-pink-500/20 text-pink-700 dark:text-pink-200",
+    },
+  },
+  {
+    id: "cafe",
+    short: "Cafe",
+    tab: "Cafe & Restaurant",
+    icon: "☕",
+    badge: "Food & Beverage POS",
+    title: "Cafe & Restaurant POS",
+    desc: "Fast order taking, kitchen display and table management that keep service smooth during rush hours.",
+    note: "Dine-in, takeaway, cafes & bakeries",
+    features: [
+      ["Table floor map", "Live table status"],
+      ["KDS & KOT printing", "Orders straight to kitchen"],
+      ["Captain ordering app", "Order from phone / tablet"],
+      ["Split bills", "By seat or payment type"],
+      ["Modifiers & combos", "Extras, sizes, meal deals"],
+      ["Recipe stock", "Auto ingredient deduction"],
+    ],
+    previewTitle: "Floor map",
+    previewTag: "KOT active",
+    preview: [
+      { name: "Table 01", meta: "Occupied • 4 guests", value: "Rs. 5,400" },
+      { name: "Table 03", meta: "Occupied • 2 guests", value: "Rs. 8,250" },
+      { name: "Table 04", meta: "Billing in progress", value: "Rs. 3,450" },
+    ],
+    tip: "Orders reach the kitchen screen in under a second.",
+    c: {
+      tabActive: "bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg shadow-amber-600/30",
+      chip: "bg-amber-500/10 border-amber-500/20 text-amber-700 dark:text-amber-400",
+      check: "bg-amber-500/15 text-amber-700 dark:text-amber-400",
+      text: "text-amber-700 dark:text-amber-400",
+      btn: "bg-amber-600 hover:bg-amber-700 shadow-amber-600/30",
+      ring: "border-amber-500 shadow-amber-500/10",
+      tipBox: "bg-amber-500/10 border-amber-500/20 text-amber-800 dark:text-amber-200",
+    },
+  },
+  {
+    id: "retail",
+    short: "Retail",
+    tab: "Retail POS",
+    icon: "🛒",
+    badge: "Retail & Supermarket POS",
+    title: "Retail POS",
+    desc: "For groceries, boutiques, electronics and pharmacies. Fast barcode checkout with live stock across all branches.",
+    note: "Barcode printer & scale ready",
+    features: [
+      ["Barcode scanning", "All 1D / 2D scanners"],
+      ["Multi-branch stock", "Live inventory sync"],
+      ["Reorder alerts", "Never run out"],
+      ["Batch & expiry tracking", "Pharmacy & food ready"],
+      ["Loyalty points", "Customer CRM"],
+      ["Returns & credit notes", "Quick exchanges"],
+    ],
+    previewTitle: "Checkout",
+    previewTag: "Scanned 0.1s",
+    preview: [
+      { name: "Linen Shirt (M)", meta: "SKU-49021 • 24 in stock", value: "Rs. 4,890" },
+      { name: "Wireless Headphones", meta: "SN-982141 • 1 yr warranty", value: "Rs. 14,500" },
+      { name: "Basmati Rice 5kg", meta: "SKU-10233 • Batch B12", value: "Rs. 2,950" },
+    ],
+    tip: "Cashiers can check stock in other branches from the billing screen.",
+    c: {
+      tabActive: "bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-lg shadow-emerald-600/30",
+      chip: "bg-emerald-500/10 border-emerald-500/20 text-emerald-700 dark:text-emerald-400",
+      check: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
+      text: "text-emerald-700 dark:text-emerald-400",
+      btn: "bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/30",
+      ring: "border-emerald-500 shadow-emerald-500/10",
+      tipBox: "bg-emerald-500/10 border-emerald-500/20 text-emerald-800 dark:text-emerald-200",
+    },
+  },
+];
+
+const NAV = [
+  { href: "#solutions", label: "POS Solutions" },
+  { href: "#features", label: "Features" },
+  { href: "#contact", label: "Contact" },
+];
+
+const ADVANTAGES = [
+  { icon: "☁️", title: "Real-time cloud sync", desc: "See sales and stock from anywhere, on any device." },
+  { icon: "⚡", title: "Sub-second billing", desc: "No lag at the counter, even at peak hours." },
+  { icon: "📊", title: "Tax & P&L reports", desc: "Z-reports, VAT/SSCL breakdowns and margins in one click." },
+  { icon: "🔒", title: "Works offline", desc: "Keeps billing without internet and syncs when back online." },
+];
+
+const STATS = [
+  { value: "3", label: "Specialised POS systems" },
+  { value: "< 1s", label: "Invoice speed", brand: true },
+  { value: "100%", label: "Multi-branch cloud sync" },
+  { value: "24/7", label: "Local support" },
+];
+
+function ArrowIcon({ className = "w-4 h-4" }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden>
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+    </svg>
+  );
+}
+
+function ThemeToggle() {
+  const toggle = () => {
+    const isDark = document.documentElement.classList.toggle("dark");
+    try {
+      localStorage.setItem("theme", isDark ? "dark" : "light");
+    } catch {}
+  };
+  return (
+    <button
+      type="button"
+      onClick={toggle}
+      aria-label="Toggle light / dark theme"
+      className="w-10 h-10 rounded-full border border-line bg-surface hover:bg-surface-2 text-ink flex items-center justify-center transition-colors"
+    >
+      {/* Moon in light mode, sun in dark mode (pure CSS, no hydration mismatch) */}
+      <svg className="w-5 h-5 dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden>
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+      </svg>
+      <svg className="w-5 h-5 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden>
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+      </svg>
+    </button>
+  );
+}
+
+function Logo({ small = false }: { small?: boolean }) {
+  return (
+    <a href="#" className="flex items-center gap-2.5 shrink-0">
+      <div
+        className={`${small ? "w-8 h-8 rounded-lg text-sm" : "w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-lg sm:text-xl"} bg-gradient-to-br from-brand to-brand-dark flex items-center justify-center shadow-lg shadow-brand-dark/30 text-white font-extrabold`}
+      >
+        S
+      </div>
+      <span className={`${small ? "text-lg" : "text-xl sm:text-2xl"} font-extrabold tracking-tight text-ink`}>
+        Sri<span className="text-brand">Biz</span>
+      </span>
+    </a>
+  );
+}
 
 export default function Home() {
-  const [selectedPos, setSelectedPos] = useState<PosType>("salora");
+  const [selectedPos, setSelectedPos] = useState<PosId>("salora");
+  const [menuOpen, setMenuOpen] = useState(false);
   const [demoSubmitted, setDemoSubmitted] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    phone: "",
-    businessName: "",
-    posCategory: "salora",
-  });
+  const [formData, setFormData] = useState({ name: "", phone: "", businessName: "", posCategory: "salora" });
+
+  const active = POS_LIST.find((p) => p.id === selectedPos)!;
 
   const handleDemoSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,888 +220,429 @@ export default function Home() {
     setDemoSubmitted(true);
   };
 
-  return (
-    <div className="min-h-screen bg-[#07090E] text-slate-100 flex flex-col font-sans selection:bg-[#E11D48] selection:text-white">
-      {/* =========================================================
-          TOP NAVIGATION BAR
-      ========================================================= */}
-      <header className="sticky top-0 z-50 backdrop-blur-md bg-[#07090E]/80 border-b border-white/[0.08]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          {/* Logo */}
-          <a href="#" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#FF2E79] to-[#E11D48] flex items-center justify-center shadow-lg shadow-[#E11D48]/30 group-hover:scale-105 transition-transform">
-              <span className="text-white font-extrabold text-xl tracking-wider">S</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-2xl font-extrabold tracking-tight text-white flex items-center">
-                Sri<span className="text-[#FF2E79]">Biz</span>
-                <span className="w-1.5 h-1.5 rounded-full bg-[#FF2E79] ml-1"></span>
-              </span>
-              <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400 -mt-1">
-                POS Ecosystem
-              </span>
-            </div>
-          </a>
+  const inputCls =
+    "w-full px-4 py-3 rounded-xl bg-bg border border-line text-ink placeholder:text-subtle text-sm focus:outline-none focus:border-brand transition-colors";
 
-          {/* Navigation Links */}
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
-            <a href="#solutions" className="hover:text-white transition-colors">
-              POS Solutions
-            </a>
-            <a href="#features" className="hover:text-white transition-colors">
-              Platform Features
-            </a>
-            <a href="#why-sribiz" className="hover:text-white transition-colors">
-              Why SriBiz
-            </a>
-            <a href="#contact" className="hover:text-white transition-colors">
-              Contact
-            </a>
+  return (
+    <div className="min-h-screen flex flex-col bg-bg text-ink">
+      {/* ================= HEADER ================= */}
+      <header className="sticky top-0 z-50 backdrop-blur-md bg-bg/80 border-b border-line">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
+          <Logo />
+
+          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-muted">
+            {NAV.map((n) => (
+              <a key={n.href} href={n.href} className="hover:text-ink transition-colors">
+                {n.label}
+              </a>
+            ))}
           </nav>
 
-          {/* Action CTAs */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <ThemeToggle />
             <a
               href="#contact"
-              className="hidden sm:inline-flex text-xs font-semibold px-4 py-2 text-slate-300 hover:text-white border border-white/10 hover:border-white/20 rounded-full transition-all"
+              className="hidden sm:inline-flex items-center gap-2 text-sm font-bold px-5 py-2.5 rounded-full bg-gradient-to-r from-brand to-brand-dark text-white shadow-lg shadow-brand-dark/30 hover:scale-[1.02] active:scale-[0.98] transition-transform"
             >
-              Sign In
+              Get Free Demo <ArrowIcon />
             </a>
-            <a
-              href="#contact"
-              className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold px-5 py-2.5 rounded-full bg-gradient-to-r from-[#FF2E79] to-[#E11D48] hover:from-[#e11463] hover:to-[#be123c] text-white shadow-lg shadow-[#E11D48]/30 hover:shadow-[#E11D48]/50 transition-all hover:scale-[1.02] active:scale-[0.98]"
+            <button
+              type="button"
+              onClick={() => setMenuOpen((o) => !o)}
+              aria-label="Open menu"
+              aria-expanded={menuOpen}
+              className="md:hidden w-10 h-10 rounded-full border border-line bg-surface text-ink flex items-center justify-center"
             >
-              <span>Get Free Demo</span>
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden>
+                {menuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
               </svg>
-            </a>
+            </button>
           </div>
         </div>
+
+        {/* Mobile menu */}
+        {menuOpen && (
+          <div className="md:hidden border-t border-line bg-bg px-4 py-4 space-y-1">
+            {NAV.map((n) => (
+              <a
+                key={n.href}
+                href={n.href}
+                onClick={() => setMenuOpen(false)}
+                className="block px-3 py-3 rounded-xl text-base font-semibold text-ink hover:bg-surface-2"
+              >
+                {n.label}
+              </a>
+            ))}
+            <a
+              href="#contact"
+              onClick={() => setMenuOpen(false)}
+              className="mt-2 flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-gradient-to-r from-brand to-brand-dark text-white font-bold"
+            >
+              Get Free Demo <ArrowIcon />
+            </a>
+          </div>
+        )}
       </header>
 
-      {/* =========================================================
-          HERO SECTION (High-contrast Dark SaaS Style)
-      ========================================================= */}
-      <section className="relative pt-12 pb-20 lg:pt-20 lg:pb-28 overflow-hidden gradient-hero-glow">
-        {/* Glow ambient spots */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[#E11D48]/15 blur-[120px] rounded-full pointer-events-none -z-10" />
+      {/* ================= HERO ================= */}
+      <section className="relative pt-10 pb-16 sm:pt-16 sm:pb-20 lg:pt-20 lg:pb-28 overflow-hidden gradient-hero-glow">
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-[600px] h-[300px] bg-brand-dark/10 dark:bg-brand-dark/15 blur-[120px] rounded-full pointer-events-none" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-            
-            {/* Left Column: Headlines & Actions */}
-            <div className="lg:col-span-6 flex flex-col items-start text-left">
-              {/* Badge */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.06] border border-white/10 text-xs font-medium text-slate-200 mb-6 backdrop-blur-sm">
-                <span className="w-2 h-2 rounded-full bg-[#FF2E79] animate-pulse"></span>
-                <span className="font-semibold text-white">SriBiz Cloud POS Platform</span>
-                <span className="text-slate-400">|</span>
-                <span className="text-slate-300">v2.5 Live</span>
-              </div>
-
-              {/* Main Headline */}
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.12] mb-6">
-                Next-Gen POS Designed for{" "}
-                <span className="gradient-text-pink">Speed & Scalability</span>
-              </h1>
-
-              {/* Subtitle */}
-              <p className="text-base sm:text-lg text-slate-300 leading-relaxed mb-8 max-w-xl font-normal">
-                Purpose-built Point of Sale software engineered for modern Sri Lankan enterprises.
-                Streamline operations across <strong className="text-white font-semibold">Salora Salons & Spas</strong>,{" "}
-                <strong className="text-white font-semibold">Cafes & Restaurants</strong>, and{" "}
-                <strong className="text-white font-semibold">Retail Stores</strong> with unified cloud intelligence.
-              </p>
-
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto mb-10">
-                <a
-                  href="#solutions"
-                  className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-gradient-to-r from-[#FF2E79] to-[#E11D48] text-white font-bold text-sm shadow-xl shadow-[#E11D48]/30 hover:shadow-[#E11D48]/50 hover:scale-[1.02] active:scale-[0.98] transition-all"
-                >
-                  <span>Explore Our 3 POS Systems</span>
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </a>
-                <a
-                  href="#contact"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-white/[0.05] hover:bg-white/[0.1] text-slate-200 hover:text-white font-semibold text-sm border border-white/10 hover:border-white/20 transition-all"
-                >
-                  <svg className="w-4 h-4 text-[#FF2E79]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  <span>Book Free Consultation</span>
-                </a>
-              </div>
-
-              {/* Micro Benefits Strip */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-3 gap-x-6 text-xs text-slate-300 font-medium pt-4 border-t border-white/[0.08] w-full">
-                <div className="flex items-center gap-2">
-                  <svg className="w-4 h-4 text-[#FF2E79] shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                  <span>Offline Resilient</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <svg className="w-4 h-4 text-[#FF2E79] shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                  <span>Multi-Outlet Cloud</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <svg className="w-4 h-4 text-[#FF2E79] shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                  <span>Hardware Agnostic</span>
-                </div>
-              </div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-10 items-center">
+          {/* Copy */}
+          <div className="text-center lg:text-left">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-surface-2 border border-line text-xs font-semibold text-ink mb-5">
+              <span className="w-2 h-2 rounded-full bg-brand animate-pulse" />
+              SriBiz Cloud POS Platform
             </div>
 
-            {/* Right Column: High-Impact POS Terminal UI Mockup */}
-            <div className="lg:col-span-6 relative">
-              <div className="relative rounded-2xl p-1 bg-gradient-to-b from-white/20 via-white/5 to-white/0 shadow-2xl shadow-black/80">
-                <div className="rounded-xl bg-[#0D121E] border border-white/10 overflow-hidden shadow-inner">
-                  
-                  {/* Mock Window Title Bar */}
-                  <div className="px-4 py-3 bg-[#131929] border-b border-white/5 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full bg-rose-500/80"></div>
-                      <div className="w-3 h-3 rounded-full bg-amber-500/80"></div>
-                      <div className="w-3 h-3 rounded-full bg-emerald-500/80"></div>
-                      <span className="text-xs font-semibold text-slate-400 ml-2">SriBiz Terminal OS • Colombo Outlet</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-[11px] text-emerald-400 font-medium bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-                      <span>Cloud Live</span>
-                    </div>
-                  </div>
+            <h1 className="text-[2.1rem] leading-[1.15] sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-ink mb-5">
+              One POS ecosystem, <span className="gradient-text-pink">built for your business</span>
+            </h1>
 
-                  {/* Mock Dashboard Body */}
-                  <div className="p-5 space-y-4">
-                    {/* Top Stats Cards */}
-                    <div className="grid grid-cols-3 gap-3">
-                      <div className="bg-[#182035] rounded-lg p-3 border border-white/5">
-                        <span className="text-[11px] text-slate-400 font-medium">Today's Revenue</span>
-                        <div className="text-base sm:text-lg font-bold text-white mt-0.5">Rs. 248,650</div>
-                        <span className="text-[10px] text-emerald-400 font-semibold">+18.5% today</span>
-                      </div>
-                      <div className="bg-[#182035] rounded-lg p-3 border border-white/5">
-                        <span className="text-[11px] text-slate-400 font-medium">Orders / Bills</span>
-                        <div className="text-base sm:text-lg font-bold text-white mt-0.5">184 Transactions</div>
-                        <span className="text-[10px] text-rose-400 font-semibold">⚡ 0.8s avg speed</span>
-                      </div>
-                      <div className="bg-[#182035] rounded-lg p-3 border border-white/5">
-                        <span className="text-[11px] text-slate-400 font-medium">Active Branch</span>
-                        <div className="text-base sm:text-lg font-bold text-white mt-0.5">Terminal #03</div>
-                        <span className="text-[10px] text-indigo-400 font-semibold">Salora & Dine-In</span>
-                      </div>
-                    </div>
-
-                    {/* Active POS Modes Quick Switcher */}
-                    <div className="bg-[#131929] rounded-lg p-3 border border-white/5">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-semibold text-slate-300">Live Operating Engines</span>
-                        <span className="text-[10px] text-slate-400">Synchronized Realtime</span>
-                      </div>
-                      <div className="grid grid-cols-3 gap-2">
-                        <div className="p-2.5 rounded-md bg-pink-500/15 border border-pink-500/30 flex items-center gap-2">
-                          <div className="w-2 h-2 rounded-full bg-pink-500"></div>
-                          <span className="text-xs font-bold text-pink-300">Salora Salon</span>
-                        </div>
-                        <div className="p-2.5 rounded-md bg-amber-500/15 border border-amber-500/30 flex items-center gap-2">
-                          <div className="w-2 h-2 rounded-full bg-amber-500"></div>
-                          <span className="text-xs font-bold text-amber-300">Cafe & Resto</span>
-                        </div>
-                        <div className="p-2.5 rounded-md bg-emerald-500/15 border border-emerald-500/30 flex items-center gap-2">
-                          <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
-                          <span className="text-xs font-bold text-emerald-300">Retail Smart</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Recent Transaction Log / Live Feed */}
-                    <div className="bg-[#131929] rounded-lg p-3 border border-white/5 space-y-2">
-                      <div className="flex items-center justify-between text-xs font-semibold text-slate-400 pb-1 border-b border-white/5">
-                        <span>Invoice / Customer</span>
-                        <span>POS Engine</span>
-                        <span>Amount</span>
-                        <span>Status</span>
-                      </div>
-                      <div className="flex items-center justify-between text-xs text-slate-300 py-1">
-                        <div>
-                          <p className="font-semibold text-white">INV-8902 • Salon Package</p>
-                          <p className="text-[10px] text-slate-400">Stylist: Anuja • Chair 02</p>
-                        </div>
-                        <span className="text-[11px] font-semibold text-pink-400">Salora POS</span>
-                        <span className="font-bold text-white">Rs. 8,500</span>
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400">Paid</span>
-                      </div>
-                      <div className="flex items-center justify-between text-xs text-slate-300 py-1 border-t border-white/5">
-                        <div>
-                          <p className="font-semibold text-white">INV-8903 • Table 05 Dine-in</p>
-                          <p className="text-[10px] text-slate-400">2x Cappuccino, 1x Pastry</p>
-                        </div>
-                        <span className="text-[11px] font-semibold text-amber-400">Cafe POS</span>
-                        <span className="font-bold text-white">Rs. 3,450</span>
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400">Paid</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Floating highlight tag */}
-                <div className="absolute -bottom-4 -left-4 bg-[#182035] border border-white/10 rounded-xl p-3 shadow-xl backdrop-blur-md flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-pink-500/20 text-[#FF2E79] flex items-center justify-center font-bold text-lg">
-                    ⚡
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-white">Zero Hardware Lock-In</p>
-                    <p className="text-[11px] text-slate-400">Touch PC, Tablet, or Mobile</p>
-                  </div>
-                </div>
-
-                <div className="absolute -top-4 -right-4 bg-[#182035] border border-white/10 rounded-xl p-3 shadow-xl backdrop-blur-md flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-lg">
-                    ☁️
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-white">Instant Sync</p>
-                    <p className="text-[11px] text-slate-400">Never lose a single bill</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* =========================================================
-          METRICS & HIGHLIGHTS STRIP
-      ========================================================= */}
-      <section className="border-y border-white/[0.08] bg-[#0A0E17] py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            <div className="flex flex-col items-center">
-              <span className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">3 Engines</span>
-              <span className="text-xs sm:text-sm text-slate-400 font-medium mt-1">Salora, Cafe & Retail</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-3xl sm:text-4xl font-extrabold text-[#FF2E79] tracking-tight">&lt; 1 Sec</span>
-              <span className="text-xs sm:text-sm text-slate-400 font-medium mt-1">Lightning Fast Invoicing</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">100%</span>
-              <span className="text-xs sm:text-sm text-slate-400 font-medium mt-1">Multi-Store Cloud Sync</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">24 / 7</span>
-              <span className="text-xs sm:text-sm text-slate-400 font-medium mt-1">Direct Sri Lankan Support</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* =========================================================
-          THE 3 POS SYSTEMS SHOWCASE SECTION
-      ========================================================= */}
-      <section id="solutions" className="py-20 lg:py-28 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          {/* Section Header */}
-          <div className="text-center max-w-3xl mx-auto mb-14">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E11D48]/10 border border-[#E11D48]/20 text-[#FF2E79] text-xs font-bold uppercase tracking-wider mb-3">
-              Specialized Solutions
-            </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
-              Our 3 Tailored POS Systems
-            </h2>
-            <p className="text-base text-slate-300 mt-4 leading-relaxed">
-              No generic, cluttered interfaces. We have built 3 specialized, industry-focused POS engines 
-              crafted precisely for your daily business workflow.
+            <p className="text-base sm:text-lg text-muted leading-relaxed mb-8 max-w-xl mx-auto lg:mx-0">
+              Specialised POS systems for <strong className="text-ink">Salons & Spas</strong>,{" "}
+              <strong className="text-ink">Cafes & Restaurants</strong> and <strong className="text-ink">Retail stores</strong>.
             </p>
-          </div>
 
-          {/* Interactive Switcher Buttons */}
-          <div className="flex justify-center mb-10">
-            <div className="inline-flex p-1.5 rounded-full bg-[#111726] border border-white/10 gap-1 sm:gap-2">
-              <button
-                onClick={() => setSelectedPos("salora")}
-                className={`px-4 sm:px-6 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all ${
-                  selectedPos === "salora"
-                    ? "bg-gradient-to-r from-[#FF2E79] to-[#E11D48] text-white shadow-lg shadow-[#E11D48]/30"
-                    : "text-slate-400 hover:text-white"
-                }`}
+            <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start mb-8">
+              <a
+                href="#solutions"
+                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-gradient-to-r from-brand to-brand-dark text-white font-bold text-sm shadow-xl shadow-brand-dark/30 hover:scale-[1.02] active:scale-[0.98] transition-transform"
               >
-                1. Salora (Salon & Spa)
-              </button>
-              <button
-                onClick={() => setSelectedPos("cafe")}
-                className={`px-4 sm:px-6 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all ${
-                  selectedPos === "cafe"
-                    ? "bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg shadow-amber-600/30"
-                    : "text-slate-400 hover:text-white"
-                }`}
+                Explore POS Systems <ArrowIcon />
+              </a>
+              <a
+                href="#contact"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-surface hover:bg-surface-2 text-ink font-semibold text-sm border border-line transition-colors"
               >
-                2. Cafe & Restaurant POS
-              </button>
-              <button
-                onClick={() => setSelectedPos("retail")}
-                className={`px-4 sm:px-6 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all ${
-                  selectedPos === "retail"
-                    ? "bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-lg shadow-emerald-600/30"
-                    : "text-slate-400 hover:text-white"
-                }`}
-              >
-                3. Retail POS
-              </button>
+                Book Free Demo
+              </a>
+            </div>
+
+            <div className="flex flex-wrap justify-center lg:justify-start gap-x-6 gap-y-2 text-xs sm:text-sm text-muted font-medium">
+              {["Works offline", "Multi-branch", "Any device"].map((t) => (
+                <span key={t} className="flex items-center gap-1.5">
+                  <span className="text-brand">✓</span> {t}
+                </span>
+              ))}
             </div>
           </div>
 
-          {/* Solution 1: SALORA POS */}
-          {selectedPos === "salora" && (
-            <div className="card-dark-gradient rounded-3xl p-6 sm:p-10 border border-white/10 transition-all">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                <div className="lg:col-span-7 space-y-6">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-500/10 border border-pink-500/20 text-pink-400 text-xs font-bold">
-                    <span>💇‍♀️ Salon, Wellness & SPA POS</span>
+          {/* Dashboard mockup */}
+          <div className="relative w-full max-w-xl mx-auto lg:max-w-none">
+            <div className="rounded-2xl p-1 bg-gradient-to-b from-line to-transparent shadow-2xl shadow-slate-900/10 dark:shadow-black/60">
+              <div className="rounded-xl bg-surface border border-line overflow-hidden">
+                <div className="px-4 py-3 bg-surface-2 border-b border-line flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+                    <span className="text-[11px] sm:text-xs font-semibold text-subtle ml-2 truncate">SriBiz • Colombo Outlet</span>
                   </div>
-                  <h3 className="text-3xl sm:text-4xl font-extrabold text-white">
-                    Salora POS — Designed for Beauty, Wellness & Luxury Spas
-                  </h3>
-                  <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-                    Designed from the ground up for hair salons, aesthetic clinics, luxury spas, nail bars, and wellness centers. 
-                    Manage appointments, automate stylist commission splits, and track recurring client packages seamlessly.
-                  </p>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
-                    <div className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-200">
-                      <div className="w-5 h-5 rounded-full bg-pink-500/20 text-pink-400 flex items-center justify-center shrink-0 mt-0.5">✓</div>
-                      <span><strong>Calendar & Slot Booking:</strong> Color-coded chair & stylist booking schedule.</span>
-                    </div>
-                    <div className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-200">
-                      <div className="w-5 h-5 rounded-full bg-pink-500/20 text-pink-400 flex items-center justify-center shrink-0 mt-0.5">✓</div>
-                      <span><strong>Stylist Commission Auto-Split:</strong> Instant payouts, tips, and service tiers.</span>
-                    </div>
-                    <div className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-200">
-                      <div className="w-5 h-5 rounded-full bg-pink-500/20 text-pink-400 flex items-center justify-center shrink-0 mt-0.5">✓</div>
-                      <span><strong>Client History & Formula Logs:</strong> Hair dye ratios, skin treatments, and notes.</span>
-                    </div>
-                    <div className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-200">
-                      <div className="w-5 h-5 rounded-full bg-pink-500/20 text-pink-400 flex items-center justify-center shrink-0 mt-0.5">✓</div>
-                      <span><strong>WhatsApp/SMS Reminders:</strong> Cut down customer no-shows by up to 70%.</span>
-                    </div>
-                    <div className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-200">
-                      <div className="w-5 h-5 rounded-full bg-pink-500/20 text-pink-400 flex items-center justify-center shrink-0 mt-0.5">✓</div>
-                      <span><strong>Spa Room & Bed Allocation:</strong> Prevent double booking of therapy rooms.</span>
-                    </div>
-                    <div className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-200">
-                      <div className="w-5 h-5 rounded-full bg-pink-500/20 text-pink-400 flex items-center justify-center shrink-0 mt-0.5">✓</div>
-                      <span><strong>Prepaid Packages & Gift Cards:</strong> Boost recurring visits & loyalty.</span>
-                    </div>
-                  </div>
-
-                  <div className="pt-4 flex flex-wrap gap-4 items-center">
-                    <a
-                      href="#contact"
-                      onClick={() => setFormData({ ...formData, posCategory: "salora" })}
-                      className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-pink-600 hover:bg-pink-700 text-white font-bold text-xs sm:text-sm shadow-lg shadow-pink-600/30 transition-all"
-                    >
-                      <span>Request Salora POS Demo</span>
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                      </svg>
-                    </a>
-                    <span className="text-xs text-slate-400">Used by top salons across Sri Lanka</span>
-                  </div>
+                  <span className="shrink-0 flex items-center gap-1.5 text-[10px] sm:text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Live
+                  </span>
                 </div>
 
-                {/* Right Feature Card */}
-                <div className="lg:col-span-5 bg-[#121828] rounded-2xl p-6 border border-white/10 space-y-4">
-                  <div className="flex items-center justify-between pb-3 border-b border-white/5">
-                    <span className="text-xs font-bold text-pink-400 uppercase tracking-wider">Salora Engine Overview</span>
-                    <span className="text-[11px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full">Touch Ready</span>
-                  </div>
-                  <div className="space-y-3">
-                    <div className="p-3 bg-[#182136] rounded-xl flex items-center justify-between">
-                      <span className="text-xs font-semibold text-white">Hair Coloring & Wash</span>
-                      <span className="text-xs font-bold text-pink-400">Rs. 12,500</span>
-                    </div>
-                    <div className="p-3 bg-[#182136] rounded-xl flex items-center justify-between">
-                      <span className="text-xs font-semibold text-white">Full Body Ayurvedic Spa</span>
-                      <span className="text-xs font-bold text-pink-400">Rs. 9,800</span>
-                    </div>
-                    <div className="p-3 bg-[#182136] rounded-xl flex items-center justify-between">
-                      <span className="text-xs font-semibold text-white">Bridal Dressing Package</span>
-                      <span className="text-xs font-bold text-pink-400">Rs. 45,000</span>
-                    </div>
-                  </div>
-                  <div className="p-3 rounded-xl bg-pink-500/10 border border-pink-500/20 text-xs text-pink-200">
-                    💡 <strong>Tip:</strong> Stylist commission splits are computed automatically at the checkout counter.
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Solution 2: CAFE & RESTAURANT POS */}
-          {selectedPos === "cafe" && (
-            <div className="card-dark-gradient rounded-3xl p-6 sm:p-10 border border-white/10 transition-all">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                <div className="lg:col-span-7 space-y-6">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-bold">
-                    <span>☕ Food & Beverage POS</span>
-                  </div>
-                  <h3 className="text-3xl sm:text-4xl font-extrabold text-white">
-                    Cafe & Restaurant POS — Built for Rush Hours & High Turnover
-                  </h3>
-                  <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-                    Fast order punching, digital Kitchen Display System (KDS), table status layout, and captain mobile ordering 
-                    to keep your service fluid and error-free during peak lunch and dinner rushes.
-                  </p>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
-                    <div className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-200">
-                      <div className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 mt-0.5">✓</div>
-                      <span><strong>Floor & Table Layout:</strong> Visual occupied, vacant, and billing status.</span>
-                    </div>
-                    <div className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-200">
-                      <div className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 mt-0.5">✓</div>
-                      <span><strong>KDS & Kitchen Printer:</strong> Send instant KOT directly to chef stations.</span>
-                    </div>
-                    <div className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-200">
-                      <div className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 mt-0.5">✓</div>
-                      <span><strong>Captain Ordering App:</strong> Take table-side orders on phone or tablet.</span>
-                    </div>
-                    <div className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-200">
-                      <div className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 mt-0.5">✓</div>
-                      <span><strong>Split Bills & Multi-Tender:</strong> Split by person, seat, or payment type.</span>
-                    </div>
-                    <div className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-200">
-                      <div className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 mt-0.5">✓</div>
-                      <span><strong>Menu Modifiers & Combos:</strong> Extra cheese, spicy level, or beverage combos.</span>
-                    </div>
-                    <div className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-200">
-                      <div className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 mt-0.5">✓</div>
-                      <span><strong>Recipe & Ingredient Stock:</strong> Automatic flour, cheese, and milk deductions.</span>
-                    </div>
-                  </div>
-
-                  <div className="pt-4 flex flex-wrap gap-4 items-center">
-                    <a
-                      href="#contact"
-                      onClick={() => setFormData({ ...formData, posCategory: "cafe" })}
-                      className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs sm:text-sm shadow-lg shadow-amber-600/30 transition-all"
-                    >
-                      <span>Request Cafe POS Demo</span>
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                      </svg>
-                    </a>
-                    <span className="text-xs text-slate-400">Suitable for QSR, Dine-in, Cafes & Bakeries</span>
-                  </div>
-                </div>
-
-                {/* Right Feature Card */}
-                <div className="lg:col-span-5 bg-[#121828] rounded-2xl p-6 border border-white/10 space-y-4">
-                  <div className="flex items-center justify-between pb-3 border-b border-white/5">
-                    <span className="text-xs font-bold text-amber-400 uppercase tracking-wider">Live Table Floor Map</span>
-                    <span className="text-[11px] text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded-full">KOT Active</span>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="p-3 bg-rose-500/15 border border-rose-500/30 rounded-xl text-center">
-                      <span className="text-xs font-bold text-white">Table 01</span>
-                      <p className="text-[11px] text-rose-300 font-semibold mt-1">Occupied • Rs. 5,400</p>
-                    </div>
-                    <div className="p-3 bg-emerald-500/15 border border-emerald-500/30 rounded-xl text-center">
-                      <span className="text-xs font-bold text-white">Table 02</span>
-                      <p className="text-[11px] text-emerald-300 font-semibold mt-1">Vacant • Ready</p>
-                    </div>
-                    <div className="p-3 bg-rose-500/15 border border-rose-500/30 rounded-xl text-center">
-                      <span className="text-xs font-bold text-white">Table 03</span>
-                      <p className="text-[11px] text-rose-300 font-semibold mt-1">Occupied • Rs. 8,250</p>
-                    </div>
-                    <div className="p-3 bg-amber-500/15 border border-amber-500/30 rounded-xl text-center">
-                      <span className="text-xs font-bold text-white">Table 04</span>
-                      <p className="text-[11px] text-amber-300 font-semibold mt-1">Billing in Progress</p>
-                    </div>
-                  </div>
-                  <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-200">
-                    ⚡ <strong>Kitchen Sync:</strong> Orders appear immediately on kitchen monitors within 200 milliseconds.
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Solution 3: RETAIL POS */}
-          {selectedPos === "retail" && (
-            <div className="card-dark-gradient rounded-3xl p-6 sm:p-10 border border-white/10 transition-all">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                <div className="lg:col-span-7 space-y-6">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold">
-                    <span>🛒 Smart Retail & Supermarket POS</span>
-                  </div>
-                  <h3 className="text-3xl sm:text-4xl font-extrabold text-white">
-                    Retail POS — High-Volume Scanning & Real-Time Inventory
-                  </h3>
-                  <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-                    Engineered for groceries, apparel boutiques, electronic stores, pharmacies, and multi-branch retail outlets. 
-                    Accelerate your checkout queues, track supplier reorders, and manage barcode labels effortlessly.
-                  </p>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
-                    <div className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-200">
-                      <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">✓</div>
-                      <span><strong>High-Speed Barcode Scanning:</strong> Compatible with all 1D/2D laser scanners.</span>
-                    </div>
-                    <div className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-200">
-                      <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">✓</div>
-                      <span><strong>Multi-Branch Inventory Sync:</strong> Real-time warehouse & store stock visibility.</span>
-                    </div>
-                    <div className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-200">
-                      <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">✓</div>
-                      <span><strong>Automated Reorder Alerts:</strong> Never run out of your high-margin fast-moving items.</span>
-                    </div>
-                    <div className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-200">
-                      <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">✓</div>
-                      <span><strong>Batch, Serial & Expiry Tracking:</strong> Crucial for medicines, cosmetics, and food.</span>
-                    </div>
-                    <div className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-200">
-                      <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">✓</div>
-                      <span><strong>Customer CRM & Points:</strong> Member tiers, SMS offers, and birthday discounts.</span>
-                    </div>
-                    <div className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-200">
-                      <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">✓</div>
-                      <span><strong>Quick Returns & Credit Notes:</strong> Smooth exchange flow without messy paperwork.</span>
-                    </div>
-                  </div>
-
-                  <div className="pt-4 flex flex-wrap gap-4 items-center">
-                    <a
-                      href="#contact"
-                      onClick={() => setFormData({ ...formData, posCategory: "retail" })}
-                      className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-lg shadow-emerald-600/30 transition-all"
-                    >
-                      <span>Request Retail POS Demo</span>
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                      </svg>
-                    </a>
-                    <span className="text-xs text-slate-400">Barcode printer & weight scale integrated</span>
-                  </div>
-                </div>
-
-                {/* Right Feature Card */}
-                <div className="lg:col-span-5 bg-[#121828] rounded-2xl p-6 border border-white/10 space-y-4">
-                  <div className="flex items-center justify-between pb-3 border-b border-white/5">
-                    <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">Fast Barcode Terminal</span>
-                    <span className="text-[11px] text-emerald-300 bg-emerald-500/10 px-2 py-0.5 rounded-full">Scanned 0.1s</span>
-                  </div>
-                  <div className="space-y-2.5">
-                    <div className="p-3 bg-[#182136] rounded-xl flex items-center justify-between">
-                      <div>
-                        <p className="text-xs font-semibold text-white">SKU-49021 • Linen Shirt (M)</p>
-                        <p className="text-[10px] text-slate-400">Stock: 24 in Branch A • 62 in Warehouse</p>
+                <div className="p-3 sm:p-5 space-y-3 sm:space-y-4">
+                  <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                    {[
+                      { l: "Revenue", v: "Rs. 248K", s: "+18.5%", sc: "text-emerald-600 dark:text-emerald-400" },
+                      { l: "Bills", v: "184", s: "0.8s avg", sc: "text-rose-600 dark:text-rose-400" },
+                      { l: "Branches", v: "3", s: "All synced", sc: "text-indigo-600 dark:text-indigo-400" },
+                    ].map((s) => (
+                      <div key={s.l} className="bg-surface-2 rounded-lg p-2.5 sm:p-3 border border-line">
+                        <span className="text-[10px] sm:text-[11px] text-subtle font-medium">{s.l}</span>
+                        <div className="text-sm sm:text-lg font-bold text-ink mt-0.5">{s.v}</div>
+                        <span className={`text-[10px] font-semibold ${s.sc}`}>{s.s}</span>
                       </div>
-                      <span className="text-xs font-bold text-emerald-400">Rs. 4,890</span>
-                    </div>
-                    <div className="p-3 bg-[#182136] rounded-xl flex items-center justify-between">
-                      <div>
-                        <p className="text-xs font-semibold text-white">SKU-89104 • Wireless Headphones</p>
-                        <p className="text-[10px] text-slate-400">Serial: SN-982141 • 1 Yr Warranty</p>
-                      </div>
-                      <span className="text-xs font-bold text-emerald-400">Rs. 14,500</span>
-                    </div>
+                    ))}
                   </div>
-                  <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-200">
-                    📦 <strong>Multi-Store Sync:</strong> Cashiers can check stock availability in nearby branches directly from the billing screen.
+
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="p-2 sm:p-2.5 rounded-md bg-pink-500/10 border border-pink-500/25 text-[11px] sm:text-xs font-bold text-pink-600 dark:text-pink-300 text-center">Salora</div>
+                    <div className="p-2 sm:p-2.5 rounded-md bg-amber-500/10 border border-amber-500/25 text-[11px] sm:text-xs font-bold text-amber-700 dark:text-amber-300 text-center">Cafe</div>
+                    <div className="p-2 sm:p-2.5 rounded-md bg-emerald-500/10 border border-emerald-500/25 text-[11px] sm:text-xs font-bold text-emerald-700 dark:text-emerald-300 text-center">Retail</div>
+                  </div>
+
+                  <div className="bg-surface-2 rounded-lg p-3 border border-line divide-y divide-line">
+                    {[
+                      { t: "INV-8902 • Salon Package", m: "Salora POS", a: "Rs. 8,500", mc: "text-pink-600 dark:text-pink-400" },
+                      { t: "INV-8903 • Table 05", m: "Cafe POS", a: "Rs. 3,450", mc: "text-amber-700 dark:text-amber-400" },
+                    ].map((r) => (
+                      <div key={r.t} className="flex items-center justify-between gap-2 py-2 first:pt-0 last:pb-0 text-xs">
+                        <div className="min-w-0">
+                          <p className="font-semibold text-ink truncate">{r.t}</p>
+                          <p className={`text-[10px] font-semibold ${r.mc}`}>{r.m}</p>
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <span className="font-bold text-ink">{r.a}</span>
+                          <span className="hidden sm:inline px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">Paid</span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
-          )}
 
-          {/* 3 Cards Quick Comparison Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
-            {/* Salora Card */}
-            <div 
-              onClick={() => setSelectedPos("salora")}
-              className={`cursor-pointer rounded-2xl p-6 transition-all ${
-                selectedPos === "salora" 
-                  ? "bg-[#181F33] border-2 border-pink-500 shadow-xl shadow-pink-500/10" 
-                  : "bg-[#0E1322] border border-white/10 hover:border-white/20"
-              }`}
-            >
-              <div className="w-10 h-10 rounded-xl bg-pink-500/20 text-pink-400 flex items-center justify-center font-bold mb-4">
-                💇‍♀️
-              </div>
-              <h4 className="text-lg font-bold text-white mb-2">Salora POS</h4>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                Salon, Wellness & Spa with stylist bookings, appointments, and client formula histories.
-              </p>
-              <div className="mt-4 pt-4 border-t border-white/5 flex items-center justify-between text-xs font-semibold text-pink-400">
-                <span>View Engine</span>
-                <span>→</span>
-              </div>
-            </div>
-
-            {/* Cafe Card */}
-            <div 
-              onClick={() => setSelectedPos("cafe")}
-              className={`cursor-pointer rounded-2xl p-6 transition-all ${
-                selectedPos === "cafe" 
-                  ? "bg-[#181F33] border-2 border-amber-500 shadow-xl shadow-amber-500/10" 
-                  : "bg-[#0E1322] border border-white/10 hover:border-white/20"
-              }`}
-            >
-              <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold mb-4">
-                ☕
-              </div>
-              <h4 className="text-lg font-bold text-white mb-2">Cafe & Restaurant POS</h4>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                Floor map table status, KDS kitchen tickets, split billing, and captain handheld tablets.
-              </p>
-              <div className="mt-4 pt-4 border-t border-white/5 flex items-center justify-between text-xs font-semibold text-amber-400">
-                <span>View Engine</span>
-                <span>→</span>
-              </div>
-            </div>
-
-            {/* Retail Card */}
-            <div 
-              onClick={() => setSelectedPos("retail")}
-              className={`cursor-pointer rounded-2xl p-6 transition-all ${
-                selectedPos === "retail" 
-                  ? "bg-[#181F33] border-2 border-emerald-500 shadow-xl shadow-emerald-500/10" 
-                  : "bg-[#0E1322] border border-white/10 hover:border-white/20"
-              }`}
-            >
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold mb-4">
-                🛒
-              </div>
-              <h4 className="text-lg font-bold text-white mb-2">Retail POS</h4>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                High-speed barcode checkout, multi-store stock visibility, and supplier reordering.
-              </p>
-              <div className="mt-4 pt-4 border-t border-white/5 flex items-center justify-between text-xs font-semibold text-emerald-400">
-                <span>View Engine</span>
-                <span>→</span>
+            {/* Floating badges: inside bounds on mobile-safe screens only */}
+            <div className="hidden sm:flex absolute -bottom-5 left-4 bg-surface border border-line rounded-xl p-3 shadow-xl items-center gap-3">
+              <div className="w-9 h-9 rounded-lg bg-brand/15 flex items-center justify-center">⚡</div>
+              <div>
+                <p className="text-xs font-bold text-ink">No hardware lock-in</p>
+                <p className="text-[11px] text-subtle">PC, tablet or mobile</p>
               </div>
             </div>
           </div>
-
         </div>
       </section>
 
-      {/* =========================================================
-          WHY SReBIZ / CORE PLATFORM ADVANTAGES (Concise Grid)
-      ========================================================= */}
-      <section id="features" className="py-20 bg-[#0A0D15] border-t border-white/[0.08]">
+      {/* ================= STATS ================= */}
+      <section className="border-y border-line bg-bg-soft py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+          {STATS.map((s) => (
+            <div key={s.label}>
+              <div className={`text-2xl sm:text-4xl font-extrabold tracking-tight ${s.brand ? "text-brand" : "text-ink"}`}>{s.value}</div>
+              <div className="text-xs sm:text-sm text-subtle font-medium mt-1">{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ================= POS SOLUTIONS ================= */}
+      <section id="solutions" className="py-16 sm:py-20 lg:py-28 scroll-mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <span className="text-xs uppercase font-bold tracking-widest text-[#FF2E79]">Built for Performance</span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mt-2">
-              Why Businesses Rely on SriBiz
+          <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
+            <span className="text-xs uppercase font-bold tracking-widest text-brand">Our POS Systems</span>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-ink tracking-tight mt-2">
+              Three POS systems, one platform
             </h2>
-            <p className="text-sm sm:text-base text-slate-300 mt-3">
-              Compact, fast, and engineered to eliminate checkout bottlenecks and inventory discrepancies.
-            </p>
+            <p className="text-sm sm:text-base text-muted mt-3">Each one built for how your business actually works.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Feature 1 */}
-            <div className="bg-[#101524] p-6 rounded-2xl border border-white/5 hover:border-[#FF2E79]/30 transition-all">
-              <div className="w-12 h-12 rounded-xl bg-[#FF2E79]/15 text-[#FF2E79] flex items-center justify-center text-xl font-bold mb-4">
-                ☁️
-              </div>
-              <h3 className="text-base font-bold text-white mb-2">Real-Time Cloud Sync</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Access your sales figures, cash drawer, and inventory counts from anywhere on your phone or laptop in real-time.
-              </p>
+          {/* Tabs */}
+          <div className="flex justify-center mb-8">
+            <div className="grid grid-cols-3 w-full sm:w-auto p-1.5 rounded-2xl sm:rounded-full bg-surface-2 border border-line gap-1">
+              {POS_LIST.map((p) => (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => setSelectedPos(p.id)}
+                  className={`px-2 sm:px-6 py-2.5 rounded-xl sm:rounded-full text-xs sm:text-sm font-bold transition-all ${
+                    selectedPos === p.id ? p.c.tabActive : "text-subtle hover:text-ink"
+                  }`}
+                >
+                  <span className="sm:hidden">{p.short}</span>
+                  <span className="hidden sm:inline">{p.tab}</span>
+                </button>
+              ))}
             </div>
+          </div>
 
-            {/* Feature 2 */}
-            <div className="bg-[#101524] p-6 rounded-2xl border border-white/5 hover:border-[#FF2E79]/30 transition-all">
-              <div className="w-12 h-12 rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center text-xl font-bold mb-4">
-                ⚡
-              </div>
-              <h3 className="text-base font-bold text-white mb-2">Sub-Second Billing</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Zero lag when punching receipts or scanning barcodes. Keep lines moving rapidly even during peak festive hours.
-              </p>
-            </div>
+          {/* Active POS detail */}
+          <div className="rounded-3xl p-5 sm:p-8 lg:p-10 bg-surface border border-line shadow-sm">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start lg:items-center">
+              <div className="lg:col-span-7 space-y-5">
+                <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-bold ${active.c.chip}`}>
+                  {active.icon} {active.badge}
+                </span>
+                <h3 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-ink">{active.title}</h3>
+                <p className="text-sm sm:text-base text-muted leading-relaxed">{active.desc}</p>
 
-            {/* Feature 3 */}
-            <div className="bg-[#101524] p-6 rounded-2xl border border-white/5 hover:border-[#FF2E79]/30 transition-all">
-              <div className="w-12 h-12 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center text-xl font-bold mb-4">
-                📊
-              </div>
-              <h3 className="text-base font-bold text-white mb-2">Detailed Tax & P&L Reports</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Automated daily closing summaries (Z-Reports), VAT/SSCL tax breakdowns, and profit margin analysis in one click.
-              </p>
-            </div>
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {active.features.map(([title, sub]) => (
+                    <li key={title} className="flex items-start gap-2.5">
+                      <span className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold ${active.c.check}`}>✓</span>
+                      <span className="text-sm">
+                        <strong className="text-ink font-semibold">{title}</strong>
+                        <span className="block text-xs text-subtle">{sub}</span>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
 
-            {/* Feature 4 */}
-            <div className="bg-[#101524] p-6 rounded-2xl border border-white/5 hover:border-[#FF2E79]/30 transition-all">
-              <div className="w-12 h-12 rounded-xl bg-indigo-500/15 text-indigo-400 flex items-center justify-center text-xl font-bold mb-4">
-                🔒
+                <div className="pt-2 flex flex-col sm:flex-row sm:items-center gap-3">
+                  <a
+                    href="#contact"
+                    onClick={() => setFormData((f) => ({ ...f, posCategory: active.id }))}
+                    className={`inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-white font-bold text-sm shadow-lg transition-colors ${active.c.btn}`}
+                  >
+                    Request {active.short} Demo <ArrowIcon />
+                  </a>
+                  <span className="text-xs text-subtle text-center sm:text-left">{active.note}</span>
+                </div>
               </div>
-              <h3 className="text-base font-bold text-white mb-2">Offline Safeguard</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Internet drops out? SriBiz continues issuing receipts and saves all data locally, syncing automatically once back online.
-              </p>
+
+              <div className="lg:col-span-5 bg-surface-2 rounded-2xl p-4 sm:p-6 border border-line space-y-3">
+                <div className="flex items-center justify-between pb-3 border-b border-line">
+                  <span className={`text-xs font-bold uppercase tracking-wider ${active.c.text}`}>{active.previewTitle}</span>
+                  <span className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full">
+                    {active.previewTag}
+                  </span>
+                </div>
+                {active.preview.map((row) => (
+                  <div key={row.name} className="p-3 bg-surface rounded-xl border border-line flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="text-xs sm:text-sm font-semibold text-ink truncate">{row.name}</p>
+                      {row.meta && <p className="text-[11px] text-subtle truncate">{row.meta}</p>}
+                    </div>
+                    <span className={`text-xs sm:text-sm font-bold shrink-0 ${active.c.text}`}>{row.value}</span>
+                  </div>
+                ))}
+                <div className={`p-3 rounded-xl border text-xs ${active.c.tipBox}`}>💡 {active.tip}</div>
+              </div>
             </div>
+          </div>
+
+          {/* Quick cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mt-6 sm:mt-8">
+            {POS_LIST.map((p) => (
+              <button
+                key={p.id}
+                type="button"
+                onClick={() => setSelectedPos(p.id)}
+                className={`text-left rounded-2xl p-5 sm:p-6 bg-surface transition-all ${
+                  selectedPos === p.id ? `border-2 shadow-xl ${p.c.ring}` : "border border-line hover:border-subtle/40"
+                }`}
+              >
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 ${p.c.check}`}>{p.icon}</div>
+                <h4 className="text-base sm:text-lg font-bold text-ink">{p.title}</h4>
+                <p className="text-xs sm:text-sm text-muted mt-1 leading-relaxed">{p.desc}</p>
+                <span className={`mt-3 inline-flex items-center gap-1 text-xs font-semibold ${p.c.text}`}>
+                  View details <ArrowIcon className="w-3.5 h-3.5" />
+                </span>
+              </button>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* =========================================================
-          CONTACT & DEMO INQUIRY (Compact & Action-Oriented)
-      ========================================================= */}
-      <section id="contact" className="py-20 relative">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="card-dark-gradient rounded-3xl p-8 sm:p-12 border border-white/10 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-80 h-80 bg-[#FF2E79]/10 blur-[90px] rounded-full pointer-events-none" />
+      {/* ================= ADVANTAGES ================= */}
+      <section id="features" className="py-16 sm:py-20 bg-bg-soft border-y border-line scroll-mt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
+            <span className="text-xs uppercase font-bold tracking-widest text-brand">Why SriBiz</span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-ink tracking-tight mt-2">Fast, reliable, simple</h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            {ADVANTAGES.map((a) => (
+              <div key={a.title} className="bg-surface p-5 sm:p-6 rounded-2xl border border-line hover:border-brand/40 transition-colors">
+                <div className="w-11 h-11 rounded-xl bg-brand/10 flex items-center justify-center text-xl mb-4">{a.icon}</div>
+                <h3 className="text-base font-bold text-ink mb-1.5">{a.title}</h3>
+                <p className="text-sm text-muted leading-relaxed">{a.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-            <div className="text-center max-w-xl mx-auto mb-8">
-              <span className="text-xs font-bold text-[#FF2E79] uppercase tracking-widest">Connect with Us</span>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mt-2">
-                Get a Free Live Demo of SriBiz POS
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-300 mt-2">
-                Tell us about your business, and our team will set up a customized demo terminal for you today.
-              </p>
+      {/* ================= CONTACT ================= */}
+      <section id="contact" className="py-16 sm:py-20 scroll-mt-16">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="relative overflow-hidden rounded-3xl p-6 sm:p-10 bg-surface border border-line shadow-sm">
+            <div className="absolute -top-20 -right-20 w-72 h-72 bg-brand/10 blur-[90px] rounded-full pointer-events-none" />
+
+            <div className="relative text-center mb-8">
+              <span className="text-xs font-bold text-brand uppercase tracking-widest">Free Demo</span>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-ink tracking-tight mt-2">Try SriBiz POS for free</h2>
+              <p className="text-sm text-muted mt-2">Tell us about your business and we&apos;ll set up a demo for you.</p>
             </div>
 
             {demoSubmitted ? (
-              <div className="p-8 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-center space-y-3">
-                <div className="w-12 h-12 rounded-full bg-emerald-500 text-white flex items-center justify-center mx-auto text-xl font-bold">
-                  ✓
-                </div>
-                <h3 className="text-xl font-bold text-white">Thank You, {formData.name}!</h3>
-                <p className="text-sm text-slate-300">
-                  Our POS specialist will reach out to you at <strong className="text-emerald-400">{formData.phone}</strong> shortly 
-                  with a personalized walkthrough of your selected system.
+              <div className="relative p-6 sm:p-8 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-center space-y-3">
+                <div className="w-12 h-12 rounded-full bg-emerald-500 text-white flex items-center justify-center mx-auto text-xl font-bold">✓</div>
+                <h3 className="text-xl font-bold text-ink">Thank you, {formData.name}!</h3>
+                <p className="text-sm text-muted">
+                  We&apos;ll contact you at <strong className="text-emerald-600 dark:text-emerald-400">{formData.phone}</strong> shortly.
                 </p>
                 <button
+                  type="button"
                   onClick={() => setDemoSubmitted(false)}
-                  className="mt-4 px-5 py-2 rounded-full text-xs font-bold bg-white/10 hover:bg-white/20 text-white transition-all"
+                  className="mt-2 px-5 py-2 rounded-full text-xs font-bold bg-surface-2 hover:bg-line text-ink border border-line transition-colors"
                 >
-                  Submit Another Request
+                  Submit another request
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleDemoSubmit} className="space-y-4">
+              <form onSubmit={handleDemoSubmit} className="relative space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                      Your Full Name *
-                    </label>
+                  <label className="block">
+                    <span className="block text-xs font-semibold text-muted mb-1.5">Full name *</span>
                     <input
                       type="text"
                       required
-                      placeholder="e.g. Kamal Perera"
+                      placeholder="Kamal Perera"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#0B0F1A] border border-white/10 text-white placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-[#FF2E79] transition-all"
+                      className={inputCls}
                     />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                      Phone / WhatsApp Number *
-                    </label>
+                  </label>
+                  <label className="block">
+                    <span className="block text-xs font-semibold text-muted mb-1.5">Phone / WhatsApp *</span>
                     <input
                       type="tel"
                       required
-                      placeholder="e.g. 077 123 4567"
+                      placeholder="077 123 4567"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#0B0F1A] border border-white/10 text-white placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-[#FF2E79] transition-all"
+                      className={inputCls}
                     />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                      Business or Store Name
-                    </label>
+                  </label>
+                  <label className="block">
+                    <span className="block text-xs font-semibold text-muted mb-1.5">Business name</span>
                     <input
                       type="text"
-                      placeholder="e.g. Glamour Hair Studio / Ceylon Cafe"
+                      placeholder="Your business"
                       value={formData.businessName}
                       onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#0B0F1A] border border-white/10 text-white placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-[#FF2E79] transition-all"
+                      className={inputCls}
                     />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                      Which POS Do You Need? *
-                    </label>
+                  </label>
+                  <label className="block">
+                    <span className="block text-xs font-semibold text-muted mb-1.5">POS type *</span>
                     <select
                       value={formData.posCategory}
                       onChange={(e) => setFormData({ ...formData, posCategory: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#0B0F1A] border border-white/10 text-white text-xs sm:text-sm focus:outline-none focus:border-[#FF2E79] transition-all"
+                      className={inputCls}
                     >
-                      <option value="salora">Salora — Salon, Wellness & Spa POS</option>
-                      <option value="cafe">Cafe & Restaurant POS</option>
-                      <option value="retail">Retail & Supermarket POS</option>
+                      <option value="salora">Salora — Salon, Wellness & Spa</option>
+                      <option value="cafe">Cafe & Restaurant</option>
+                      <option value="retail">Retail</option>
                     </select>
-                  </div>
+                  </label>
                 </div>
-
-                <div className="pt-2 text-center">
-                  <button
-                    type="submit"
-                    className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-gradient-to-r from-[#FF2E79] to-[#E11D48] text-white font-bold text-sm shadow-xl shadow-[#E11D48]/30 hover:shadow-[#E11D48]/50 hover:scale-[1.02] active:scale-[0.98] transition-all"
-                  >
-                    Schedule My Free Demo
-                  </button>
-                  <p className="text-[11px] text-slate-400 mt-2">
-                    No credit card required. Free onboarding support across Sri Lanka.
-                  </p>
-                </div>
+                <button
+                  type="submit"
+                  className="w-full sm:w-auto sm:mx-auto sm:flex px-8 py-3.5 rounded-full bg-gradient-to-r from-brand to-brand-dark text-white font-bold text-sm shadow-xl shadow-brand-dark/30 hover:scale-[1.02] active:scale-[0.98] transition-transform"
+                >
+                  Book My Free Demo
+                </button>
               </form>
             )}
           </div>
         </div>
       </section>
 
-      {/* =========================================================
-          FOOTER
-      ========================================================= */}
-      <footer className="border-t border-white/[0.08] bg-[#05070B] py-12 text-slate-400 text-xs">
+      {/* ================= FOOTER ================= */}
+      <footer className="border-t border-line bg-bg-soft py-10 text-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-white/[0.08]">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#FF2E79] to-[#E11D48] flex items-center justify-center font-bold text-white text-sm">
-                S
-              </div>
-              <span className="text-xl font-extrabold text-white tracking-tight">
-                Sri<span className="text-[#FF2E79]">Biz</span>
-              </span>
-              <span className="text-slate-500">|</span>
-              <span className="text-xs text-slate-400">Intelligent Point of Sale Ecosystem</span>
-            </div>
-
-            <div className="flex flex-wrap items-center justify-center gap-6 text-slate-300 font-medium">
-              <a href="#solutions" className="hover:text-white transition-colors">Salora POS</a>
-              <a href="#solutions" className="hover:text-white transition-colors">Cafe & Restaurant POS</a>
-              <a href="#solutions" className="hover:text-white transition-colors">Retail POS</a>
-              <a href="#contact" className="hover:text-white transition-colors">Free Demo</a>
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-6 border-b border-line">
+            <Logo small />
+            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-muted font-medium">
+              {POS_LIST.map((p) => (
+                <a key={p.id} href="#solutions" onClick={() => setSelectedPos(p.id)} className="hover:text-ink transition-colors">
+                  {p.title}
+                </a>
+              ))}
             </div>
           </div>
-
-          <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500">
-            <p>© {new Date().getFullYear()} SriBiz. All rights reserved. Sri Lankan SaaS Engineering.</p>
-            <p>Salora • Cafe & Restaurant • Retail Point of Sale</p>
-          </div>
+          <p className="pt-6 text-center text-xs text-subtle">© {new Date().getFullYear()} SriBiz. All rights reserved.</p>
         </div>
       </footer>
     </div>
