@@ -2,10 +2,21 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SriBiz | Modern Point of Sale Ecosystem for Sri Lanka",
+  title: "SriBiz Core | Modern Point of Sale Ecosystem for Sri Lanka",
   description:
-    "Cloud POS for Salora Salons & Spas, Cafes & Restaurants, and Retail stores. Fast, reliable, and multi-branch ready.",
-  keywords: ["SriBiz", "POS Sri Lanka", "Salora Salon POS", "Restaurant POS", "Cafe POS", "Retail POS"],
+    "Cloud POS for Salora Salons & Spas, Cafes & Restaurants, and Retail stores. Complete with visual appointment booking, stylist commissions, customer formula notes, and multi-branch sync.",
+  keywords: [
+    "SriBiz Core",
+    "SriBiz",
+    "Salora Salon POS",
+    "Salon POS Sri Lanka",
+    "Spa POS Software",
+    "Stylist Commission System",
+    "Appointment Booking POS",
+    "Restaurant POS",
+    "Cafe POS",
+    "Retail POS Sri Lanka",
+  ],
 };
 
 export const viewport: Viewport = {
@@ -17,8 +28,8 @@ export const viewport: Viewport = {
   ],
 };
 
-// Applies the saved/system theme before paint to avoid a flash of the wrong theme.
-const themeScript = `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark')}}catch(e){}})();`;
+// Default to dark theme unless user explicitly chose light.
+const themeScript = `(function(){try{var t=localStorage.getItem('theme');if(t==='light'){document.documentElement.classList.remove('dark')}else{document.documentElement.classList.add('dark')}}catch(e){}})();`;
 
 export default function RootLayout({
   children,
@@ -26,7 +37,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+    <html lang="en" className="dark scroll-smooth" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />

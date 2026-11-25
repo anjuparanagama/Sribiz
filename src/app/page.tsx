@@ -13,6 +13,7 @@ type Pos = {
   title: string;
   desc: string;
   note: string;
+  comingSoon?: boolean;
   features: [string, string][];
   previewTitle: string;
   previewTag: string;
@@ -38,24 +39,27 @@ const POS_LIST: Pos[] = [
     icon: "💇‍♀️",
     badge: "Salon, Wellness & SPA POS",
     title: "Salora POS",
-    desc: "For hair salons, beauty clinics, spas and wellness centres. Bookings, stylist commissions and client history in one place.",
-    note: "Used by salons across Sri Lanka",
+    desc: "Engineered from Salon_POS for hair salons, beauty clinics and luxury spas. Visual appointment calendar, stylist commissions, customer formula notes, retail stock, and thermal/WhatsApp billing in one cloud system.",
+    note: "Used by premier salons across Sri Lanka",
     features: [
-      ["Appointment calendar", "Chair & stylist booking"],
-      ["Commission auto-split", "Tips & service tiers"],
-      ["Client history", "Formula & treatment notes"],
-      ["SMS / WhatsApp reminders", "Fewer no-shows"],
-      ["Room & bed allocation", "No double booking"],
-      ["Packages & gift cards", "Repeat visits"],
+      ["Appointment Calendar", "Chair & stylist booking with live status pipeline"],
+      ["1-Click Express Checkout", "Services + retail products in one cart, split payments"],
+      ["Stylist Commission Engine", "Auto-split commission rates, tips & staff contribution"],
+      ["Client CRM & Formula Notes", "Hair color formulas, allergy alerts & lifetime history"],
+      ["WhatsApp & Thermal Receipts", "Instant WhatsApp receipt sharing & 80mm/58mm printing"],
+      ["Bridal & Service Packages", "Bundled treatments, seasonal combos & gift vouchers"],
+      ["Salon Retail Stock Control", "Barcode scanning, shampoo & serum stock, reorder alerts"],
+      ["Daily Ledger & Z-Report", "Cash drawer balancing, petty cash & EOD revenue summary"],
     ],
-    previewTitle: "Today's services",
-    previewTag: "Touch ready",
+    previewTitle: "Salora Live Floor & Checkout",
+    previewTag: "Chair 02 Active",
     preview: [
-      { name: "Hair Colour & Wash", meta: "Stylist: Anuja", value: "Rs. 12,500" },
-      { name: "Ayurvedic Full Body Spa", meta: "Room 02", value: "Rs. 9,800" },
-      { name: "Bridal Dressing Package", meta: "Sat • 8:00 AM", value: "Rs. 45,000" },
+      { name: "Hair Colour & Keratin Spa", meta: "Stylist: Anuja • Chair 02", value: "Rs. 18,500" },
+      { name: "Bridal Dressing & Makeover Package", meta: "Lead Stylist: Dilani • Room 01", value: "Rs. 45,000" },
+      { name: "Moroccanoil Treatment 100ml (Retail)", meta: "Barcode: 7290011521 • Qty: 1", value: "Rs. 9,200" },
+      { name: "Ayurvedic Head & Shoulder Spa", meta: "Therapist: Kusal • Station 03", value: "Rs. 4,500" },
     ],
-    tip: "Stylist commissions are calculated automatically at checkout.",
+    tip: "1-click checkout converts booked appointments into paid invoices with automatic stylist commission allocation.",
     c: {
       tabActive: "bg-gradient-to-r from-pink-500 to-rose-600 text-white shadow-lg shadow-rose-600/30",
       chip: "bg-pink-500/10 border-pink-500/20 text-pink-600 dark:text-pink-400",
@@ -70,6 +74,7 @@ const POS_LIST: Pos[] = [
     id: "cafe",
     short: "Cafe",
     tab: "Cafe & Restaurant",
+    comingSoon: true,
     icon: "☕",
     badge: "Food & Beverage POS",
     title: "Cafe & Restaurant POS",
@@ -105,6 +110,7 @@ const POS_LIST: Pos[] = [
     id: "retail",
     short: "Retail",
     tab: "Retail POS",
+    comingSoon: true,
     icon: "🛒",
     badge: "Retail & Supermarket POS",
     title: "Retail POS",
@@ -140,8 +146,116 @@ const POS_LIST: Pos[] = [
 
 const NAV = [
   { href: "#solutions", label: "POS Solutions" },
+  { href: "#salora", label: "Salora Salon POS" },
   { href: "#features", label: "Features" },
   { href: "#contact", label: "Contact" },
+];
+
+const SALORA_MODULES = [
+  {
+    icon: "📅",
+    title: "Appointment Calendar & Booking",
+    tag: "Calendar & Scheduling",
+    desc: "Complete visual calendar with multi-stylist allocation, chair management, and live appointment workflow.",
+    bullets: [
+      "Day, week & month visual booking calendar",
+      "Chair, station & private treatment room allocation",
+      "Live status: Scheduled, Confirmed, In-Progress, Completed",
+      "Direct 1-click conversion to checkout bill",
+      "SMS & WhatsApp booking reminders to reduce no-shows",
+    ],
+  },
+  {
+    icon: "⚡",
+    title: "Smart Touch Checkout & Billing",
+    tag: "Express POS",
+    desc: "Lightning-fast billing combining salon services, packages, and retail products in a single customer cart.",
+    bullets: [
+      "Unified cart: hair/beauty services + retail shelves",
+      "Multi-tender split payments (Cash, Card, Bank, Voucher)",
+      "Instant WhatsApp digital receipt & 80mm/58mm thermal printing",
+      "Line discounts, service charges & change calculation",
+      "Seamless walk-in checkout without advance booking",
+    ],
+  },
+  {
+    icon: "✂️",
+    title: "Staff & Stylist Commission Engine",
+    tag: "Payroll & Commissions",
+    desc: "Automate commission calculations and tips per service without manual spreadsheet tracking.",
+    bullets: [
+      "Auto-split commissions per service rendered",
+      "Tiered commission rates based on staff experience",
+      "Daily & weekly tip collection & distribution",
+      "Staff shift rosters, chair availability & attendance",
+      "Daily stylist revenue contribution & performance reports",
+    ],
+  },
+  {
+    icon: "👤",
+    title: "Salon CRM & Treatment Formulas",
+    tag: "Client Care & History",
+    desc: "Keep detailed client treatment logs, hair color chemical formulas, and allergies ready at every visit.",
+    bullets: [
+      "Lifetime visit history, total spend & frequency",
+      "Hair dye & chemical formulas, skin treatment notes",
+      "Allergy warnings & client-specific preferences",
+      "Customer loyalty points & repeat visit rewards",
+      "Direct WhatsApp chat link for follow-ups",
+    ],
+  },
+  {
+    icon: "🧴",
+    title: "Salon Retail Inventory Control",
+    tag: "Retail Products",
+    desc: "Manage shampoos, conditioners, oils, and styling tools with real-time stock levels and barcode lookup.",
+    bullets: [
+      "Fast barcode scanning (1D & 2D) at checkout",
+      "Stock level tracking with low-stock reorder warnings",
+      "Brand, category & volume/size filtering",
+      "Auto-deduction when retail items are sold in bills",
+      "Supplier and reorder management",
+    ],
+  },
+  {
+    icon: "🎁",
+    title: "Bridal & Multi-Service Packages",
+    tag: "Packages & Combos",
+    desc: "Create and sell high-value bridal packages, seasonal makeovers, and bundled spa treatments.",
+    bullets: [
+      "Bridal dressing & makeover package bundling",
+      "Pre-set service combos with bundled discounts",
+      "Multi-session packages with redemption tracking",
+      "Service durations with automatic chair buffer times",
+      "Custom service category management (Hair, Skin, Spa)",
+    ],
+  },
+  {
+    icon: "📒",
+    title: "Cash Drawer Ledger & Z-Report",
+    tag: "Daily Finance",
+    desc: "Reconcile daily cash collections, record salon expenses, and generate audit-ready end-of-day reports.",
+    bullets: [
+      "Cash drawer opening & closing balance reconciliation",
+      "Daily expense & petty cash tracking with categories",
+      "End-of-day Z-Report & daily sales summary",
+      "Payment method breakdown (Cash vs Card vs Bank)",
+      "Discrepancy alerts and audit history",
+    ],
+  },
+  {
+    icon: "📱",
+    title: "Offline PWA & Multi-Branch Ready",
+    tag: "Touch & Multi-Branch",
+    desc: "Installable Progressive Web App that keeps billing even when internet drops, syncing branches in real time.",
+    bullets: [
+      "Works 100% offline — cash billing never stops",
+      "Background auto-sync when internet reconnects",
+      "Installable PWA for iPads, Android tablets & Touch POS",
+      "Multi-branch salon management with centralized reports",
+      "Role-based access (Owner, Manager, Cashier, Stylist)",
+    ],
+  },
 ];
 
 const ADVANTAGES = [
@@ -200,7 +314,7 @@ function Logo({ small = false }: { small?: boolean }) {
         S
       </div>
       <span className={`${small ? "text-lg" : "text-xl sm:text-2xl"} font-extrabold tracking-tight text-ink`}>
-        Sri<span className="text-brand">Biz</span>
+        Sri<span className="text-brand">Biz</span> Core
       </span>
     </a>
   );
@@ -297,7 +411,7 @@ export default function Home() {
           <div className="text-center lg:text-left">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-surface-2 border border-line text-xs font-semibold text-ink mb-5">
               <span className="w-2 h-2 rounded-full bg-brand animate-pulse" />
-              SriBiz Cloud POS Platform
+              SriBiz Core Cloud POS Platform
             </div>
 
             <h1 className="text-[2.1rem] leading-[1.15] sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-ink mb-5">
@@ -342,7 +456,7 @@ export default function Home() {
                     <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
                     <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
                     <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
-                    <span className="text-[11px] sm:text-xs font-semibold text-subtle ml-2 truncate">SriBiz • Colombo Outlet</span>
+                    <span className="text-[11px] sm:text-xs font-semibold text-subtle ml-2 truncate">SriBiz Core • Colombo Outlet</span>
                   </div>
                   <span className="shrink-0 flex items-center gap-1.5 text-[10px] sm:text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Live
@@ -365,9 +479,17 @@ export default function Home() {
                   </div>
 
                   <div className="grid grid-cols-3 gap-2">
-                    <div className="p-2 sm:p-2.5 rounded-md bg-pink-500/10 border border-pink-500/25 text-[11px] sm:text-xs font-bold text-pink-600 dark:text-pink-300 text-center">Salora</div>
-                    <div className="p-2 sm:p-2.5 rounded-md bg-amber-500/10 border border-amber-500/25 text-[11px] sm:text-xs font-bold text-amber-700 dark:text-amber-300 text-center">Cafe</div>
-                    <div className="p-2 sm:p-2.5 rounded-md bg-emerald-500/10 border border-emerald-500/25 text-[11px] sm:text-xs font-bold text-emerald-700 dark:text-emerald-300 text-center">Retail</div>
+                    <div className="p-2 sm:p-2.5 rounded-md bg-pink-500/10 border border-pink-500/25 text-[11px] sm:text-xs font-bold text-pink-600 dark:text-pink-300 text-center">
+                      Salora
+                    </div>
+                    <div className="p-2 sm:p-2.5 rounded-md bg-amber-500/10 border border-amber-500/25 text-[11px] sm:text-xs font-bold text-amber-700 dark:text-amber-300 text-center flex items-center justify-center gap-1">
+                      <span>Cafe</span>
+                      <span className="text-[8px] sm:text-[9px] px-1 py-0.5 rounded bg-amber-500/20 uppercase font-extrabold text-amber-600 dark:text-amber-400">Soon</span>
+                    </div>
+                    <div className="p-2 sm:p-2.5 rounded-md bg-emerald-500/10 border border-emerald-500/25 text-[11px] sm:text-xs font-bold text-emerald-700 dark:text-emerald-300 text-center flex items-center justify-center gap-1">
+                      <span>Retail</span>
+                      <span className="text-[8px] sm:text-[9px] px-1 py-0.5 rounded bg-emerald-500/20 uppercase font-extrabold text-emerald-700 dark:text-emerald-300">Soon</span>
+                    </div>
                   </div>
 
                   <div className="bg-surface-2 rounded-lg p-3 border border-line divide-y divide-line">
@@ -434,12 +556,23 @@ export default function Home() {
                   key={p.id}
                   type="button"
                   onClick={() => setSelectedPos(p.id)}
-                  className={`px-2 sm:px-6 py-2.5 rounded-xl sm:rounded-full text-xs sm:text-sm font-bold transition-all ${
+                  className={`px-2 sm:px-6 py-2.5 rounded-xl sm:rounded-full text-xs sm:text-sm font-bold transition-all inline-flex items-center justify-center gap-1.5 ${
                     selectedPos === p.id ? p.c.tabActive : "text-subtle hover:text-ink"
                   }`}
                 >
                   <span className="sm:hidden">{p.short}</span>
                   <span className="hidden sm:inline">{p.tab}</span>
+                  {p.comingSoon && (
+                    <span
+                      className={`text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded-full ${
+                        selectedPos === p.id
+                          ? "bg-white/20 text-white"
+                          : "bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30"
+                      }`}
+                    >
+                      Soon
+                    </span>
+                  )}
                 </button>
               ))}
             </div>
@@ -449,9 +582,20 @@ export default function Home() {
           <div className="rounded-3xl p-5 sm:p-8 lg:p-10 bg-surface border border-line shadow-sm">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start lg:items-center">
               <div className="lg:col-span-7 space-y-5">
-                <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-bold ${active.c.chip}`}>
-                  {active.icon} {active.badge}
-                </span>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-bold ${active.c.chip}`}>
+                    {active.icon} {active.badge}
+                  </span>
+                  {active.comingSoon ? (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30">
+                      ⏳ Coming Soon — Pre-register
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
+                      ✓ Available Now
+                    </span>
+                  )}
+                </div>
                 <h3 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-ink">{active.title}</h3>
                 <p className="text-sm sm:text-base text-muted leading-relaxed">{active.desc}</p>
 
@@ -473,7 +617,7 @@ export default function Home() {
                     onClick={() => setFormData((f) => ({ ...f, posCategory: active.id }))}
                     className={`inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-white font-bold text-sm shadow-lg transition-colors ${active.c.btn}`}
                   >
-                    Request {active.short} Demo <ArrowIcon />
+                    {active.comingSoon ? `Pre-register for ${active.short} POS` : `Request ${active.short} Demo`} <ArrowIcon />
                   </a>
                   <span className="text-xs text-subtle text-center sm:text-left">{active.note}</span>
                 </div>
@@ -511,7 +655,18 @@ export default function Home() {
                   selectedPos === p.id ? `border-2 shadow-xl ${p.c.ring}` : "border border-line hover:border-subtle/40"
                 }`}
               >
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 ${p.c.check}`}>{p.icon}</div>
+                <div className="flex items-center justify-between mb-3">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${p.c.check}`}>{p.icon}</div>
+                  {p.comingSoon ? (
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30">
+                      Coming Soon
+                    </span>
+                  ) : (
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
+                      Available Now
+                    </span>
+                  )}
+                </div>
                 <h4 className="text-base sm:text-lg font-bold text-ink">{p.title}</h4>
                 <p className="text-xs sm:text-sm text-muted mt-1 leading-relaxed">{p.desc}</p>
                 <span className={`mt-3 inline-flex items-center gap-1 text-xs font-semibold ${p.c.text}`}>
@@ -523,11 +678,92 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ================= SALORA FEATURE SUITE ================= */}
+      <section id="salora" className="py-16 sm:py-20 lg:py-28 border-t border-line bg-bg-soft/40 scroll-mt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+            <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-pink-500/10 border border-pink-500/25 text-xs font-bold text-pink-600 dark:text-pink-400 mb-3">
+              💇‍♀️ Powered by Salora Salon POS
+            </span>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-ink tracking-tight">
+              Everything your salon needs, <span className="gradient-text-pink">all in one place</span>
+            </h2>
+            <p className="text-sm sm:text-base text-muted mt-3 leading-relaxed">
+              Engineered specifically for Sri Lankan hair salons, beauty clinics, barbershops, and luxury spas.
+              From front-desk booking to back-office stylist payroll and stock control.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            {SALORA_MODULES.map((m) => (
+              <div
+                key={m.title}
+                className="bg-surface rounded-2xl p-5 sm:p-6 border border-line hover:border-pink-500/40 hover:shadow-xl hover:shadow-pink-500/5 transition-all flex flex-col justify-between group"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="w-12 h-12 rounded-xl bg-pink-500/10 border border-pink-500/20 text-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                      {m.icon}
+                    </span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-pink-600 dark:text-pink-400 bg-pink-500/10 px-2.5 py-1 rounded-full border border-pink-500/20">
+                      {m.tag}
+                    </span>
+                  </div>
+                  <h3 className="text-lg font-bold text-ink mb-2">{m.title}</h3>
+                  <p className="text-xs text-muted mb-4 leading-relaxed">{m.desc}</p>
+
+                  <ul className="space-y-2 border-t border-line/60 pt-3">
+                    {m.bullets.map((b) => (
+                      <li key={b} className="flex items-start gap-2 text-xs text-ink/90">
+                        <span className="text-pink-600 dark:text-pink-400 font-bold shrink-0 mt-0.5">✓</span>
+                        <span className="text-muted leading-tight">{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="pt-5 mt-4 border-t border-line">
+                  <a
+                    href="#contact"
+                    onClick={() => setFormData((f) => ({ ...f, posCategory: "salora" }))}
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-pink-600 dark:text-pink-400 hover:text-pink-700 transition-colors"
+                  >
+                    Get Salora Demo <ArrowIcon className="w-3.5 h-3.5" />
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Quick highlight banner */}
+          <div className="mt-12 rounded-3xl p-6 sm:p-8 bg-gradient-to-r from-pink-500/10 via-rose-500/5 to-transparent border border-pink-500/20 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 text-white flex items-center justify-center text-2xl font-bold shadow-lg shadow-pink-500/30 shrink-0">
+                💇‍♀️
+              </div>
+              <div>
+                <h4 className="text-lg sm:text-xl font-bold text-ink">Ready to modernize your salon with Salora?</h4>
+                <p className="text-xs sm:text-sm text-muted mt-0.5">
+                  Set up your salon services, stylist commissions, and customer formulas in less than 15 minutes.
+                </p>
+              </div>
+            </div>
+            <a
+              href="#contact"
+              onClick={() => setFormData((f) => ({ ...f, posCategory: "salora" }))}
+              className="shrink-0 px-6 py-3 rounded-full bg-gradient-to-r from-pink-500 to-rose-600 text-white text-xs sm:text-sm font-bold shadow-lg shadow-rose-600/30 hover:scale-[1.02] active:scale-[0.98] transition-transform"
+            >
+              Book Free Salon Demo →
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* ================= ADVANTAGES ================= */}
       <section id="features" className="py-16 sm:py-20 bg-bg-soft border-y border-line scroll-mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
-            <span className="text-xs uppercase font-bold tracking-widest text-brand">Why SriBiz</span>
+            <span className="text-xs uppercase font-bold tracking-widest text-brand">Why SriBiz Core</span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-ink tracking-tight mt-2">Fast, reliable, simple</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -550,7 +786,7 @@ export default function Home() {
 
             <div className="relative text-center mb-8">
               <span className="text-xs font-bold text-brand uppercase tracking-widest">Free Demo</span>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-ink tracking-tight mt-2">Try SriBiz POS for free</h2>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-ink tracking-tight mt-2">Try SriBiz Core POS for free</h2>
               <p className="text-sm text-muted mt-2">Tell us about your business and we&apos;ll set up a demo for you.</p>
             </div>
 
@@ -611,9 +847,9 @@ export default function Home() {
                       onChange={(e) => setFormData({ ...formData, posCategory: e.target.value })}
                       className={inputCls}
                     >
-                      <option value="salora">Salora — Salon, Wellness & Spa</option>
-                      <option value="cafe">Cafe & Restaurant</option>
-                      <option value="retail">Retail</option>
+                      <option value="salora">Salora — Salon, Wellness & Spa (Available Now)</option>
+                      <option value="cafe">Cafe & Restaurant (Coming Soon)</option>
+                      <option value="retail">Retail (Coming Soon)</option>
                     </select>
                   </label>
                 </div>
@@ -636,13 +872,23 @@ export default function Home() {
             <Logo small />
             <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-muted font-medium">
               {POS_LIST.map((p) => (
-                <a key={p.id} href="#solutions" onClick={() => setSelectedPos(p.id)} className="hover:text-ink transition-colors">
-                  {p.title}
+                <a
+                  key={p.id}
+                  href="#solutions"
+                  onClick={() => setSelectedPos(p.id)}
+                  className="hover:text-ink transition-colors inline-flex items-center gap-1.5"
+                >
+                  <span>{p.title}</span>
+                  {p.comingSoon && (
+                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/25">
+                      Soon
+                    </span>
+                  )}
                 </a>
               ))}
             </div>
           </div>
-          <p className="pt-6 text-center text-xs text-subtle">© {new Date().getFullYear()} SriBiz. All rights reserved.</p>
+          <p className="pt-6 text-center text-xs text-subtle">© {new Date().getFullYear()} SriBiz Core. All rights reserved.</p>
         </div>
       </footer>
     </div>
